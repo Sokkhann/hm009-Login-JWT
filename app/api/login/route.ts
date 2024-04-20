@@ -58,6 +58,7 @@ export async function POST(
         });
         return NextResponse.json({
             accessToken: accessToken,
+            refreshToken: refreshToken,
             user: user,
          }, {
             status: response.status,
