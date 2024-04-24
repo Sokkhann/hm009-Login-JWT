@@ -6,6 +6,7 @@ export default function TestJWT() {
 
     const [accessToken, setAccessToken] = useState("");
     const [user, setUser] = useState(null);
+    const [unauthorized, setUnauthorized] = useState(false)
 
     // this is method handle on login
     const handleLogin = async () => {
@@ -39,6 +40,7 @@ export default function TestJWT() {
             name: "New Product Updated By SK"
         };
 
+        const res = await
         fetch(
             `https://store.istad.co/api/products/527`,
             {
@@ -50,13 +52,13 @@ export default function TestJWT() {
                 body: JSON.stringify(body)
             }
         )
-        .then(res => res.json())
-        .then(data => {
-            console.log("Data From Partial Update: ", data)
-        })
-        .catch(error => {
-            console.log(error)
-        })
+
+        if (res.status === 401) {
+            setUnauthorized(true)
+        }
+
+        const data = await res.json();
+        console.log("Data from partial update!", data);
 
     }
 
@@ -87,9 +89,11 @@ export default function TestJWT() {
             <button onClick={handlePartialUpdate} className='py-4 px-12 my-2 bg-red-800 rounded-lg text-gray-100 text-xl'>
                 Partial Update
             </button>
-            <button onClick={handleRefreshToken} className='py-4 px-12 my-2 bg-red-800 rounded-lg text-gray-100 text-xl'>
-                Refresh Token
-            </button>
+            {unauthorized && (
+                <button onClick={handleRefreshToken} className='py-4 px-12 my-2 bg-red-800 rounded-lg text-gray-100 text-xl'>
+                    Refresh Token
+                </button>
+            )}
         </main>
     </div>
   )
